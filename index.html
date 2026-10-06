@@ -979,36 +979,52 @@ function drawField(){
 }
 function facing(p){ return ((p.side===0)!==G.flip) ? 1 : -1; }
 function contrastOn(hex){ hex=(hex||'#ffffff').replace('#',''); if(hex.length===3) hex=hex.replace(/./g,'$&$&'); var r=parseInt(hex.substr(0,2),16)||0,g=parseInt(hex.substr(2,2),16)||0,b=parseInt(hex.substr(4,2),16)||0; return (r*299+g*587+b*114)/1000>140?'#15181f':'#ffffff'; }
+function shade(hex,f){ hex=(hex||'#888888').replace('#',''); if(hex.length===3) hex=hex.replace(/./g,'$&$&');
+  var r=parseInt(hex.substr(0,2),16)||0,g=parseInt(hex.substr(2,2),16)||0,b=parseInt(hex.substr(4,2),16)||0;
+  return 'rgb('+Math.round(clamp(r*f,0,255))+','+Math.round(clamp(g*f,0,255))+','+Math.round(clamp(b*f,0,255))+')'; }
 function drawPlayer(p){
-  var x=sxOf(p.x), y=Math.round(p.y*S), k=p.side===0?kOff:kDef, f=facing(p);
+  var x=sxOf(p.x), y=Math.round(p.y*S), k=p.side===0?kOff:kDef, f=facing(p), carry=(p===P.carrier);
   if(x<-12||x>W+12) return;
-  cx.fillStyle='rgba(0,0,0,.30)'; cx.fillRect(x-4,y+2,10,2);
+  cx.fillStyle='rgba(0,0,0,.34)'; cx.fillRect(x-4,y+1,10,2);                 // shadow
   if(p.down){
-    cx.fillStyle='#0b0f14'; cx.fillRect(x-7,y-4,14,6);
-    cx.fillStyle=k.jersey; cx.fillRect(x-6,y-3,9,4);
-    cx.fillStyle=k.helmet; cx.fillRect(x+(f>0?3:-6),y-3,4,4);
-  } else {
-    var st=p.moving?Math.floor(p.anim*12)%2:0;
-    cx.fillStyle='#0b0f14'; cx.fillRect(x-4,y-15,10,16);            // dark outline
-    cx.fillStyle=k.pants;                                          // legs
-    cx.fillRect(x-3,y-5,2,st?5:6); cx.fillRect(x+1,y-5,2,st?6:5);
-    cx.fillStyle='#17171c'; cx.fillRect(x-3,y+(st?1:0),2,1); cx.fillRect(x+1,y+(st?0:1),2,1); // cleats
-    cx.fillStyle=k.jersey; cx.fillRect(x-3,y-11,8,7);              // body
-    cx.fillRect(x-4,y-12,10,2);                                    // shoulder pads
-    cx.fillRect(x-4,y-11+(st?1:0),2,4); cx.fillRect(x+4,y-11+(st?0:1),2,4); // arms
-    if(p.num!=null){ var ns=''+p.num; ptext(ns,x+1-(ns.length*4-1)/2,y-10,1,contrastOn(k.jersey)); } else { cx.fillStyle=k.helmet; cx.fillRect(x,y-10,2,4); } cx.fillStyle=k.helmet;               // jersey number block
-    cx.fillRect(x-3,y-15,8,4);                                     // helmet
-    cx.fillStyle='rgba(255,255,255,.35)'; cx.fillRect(x-2,y-15,3,1); // helmet shine
-    cx.fillStyle='#cfd3d6'; cx.fillRect(x+(f>0?4:-4),y-14,1,3);    // facemask
+    cx.fillStyle='#0a0e13'; cx.fillRect(x-7,y-5,14,6);
+    cx.fillStyle=k.jersey;  cx.fillRect(x-6,y-4,9,4);
+    cx.fillStyle=shade(k.jersey,.7); cx.fillRect(x-6,y-1,9,1);
+    cx.fillStyle=k.helmet;  cx.fillRect(x+(f>0?3:-6),y-4,4,4);
+    return;
   }
-  if(p.pname){                               // named players always show their name
-    var isSel = p.user || p===P.carrier;     // controlled / carrying = selected
-    if(!isSel && G && G.poss===0 && P.rb){   // pre-snap offense: the chosen ball carrier
-      var selCar=(G.pickCarry==='WR' && P.wr)?P.wr[0]:P.rb; if(p===selCar) isSel=true; }
-    var nmCol = isSel ? '#ffd23f' : '#ffffff';
-    var wN=tw(p.pname,1), ny=Math.max(y-24,1);
-    ptext(p.pname,x-wN/2+1,ny+1,1,'#101425');
-    ptext(p.pname,x-wN/2,ny,1,nmCol); }
+  var jD=shade(k.jersey,.66), jL=shade(k.jersey,1.28), hD=shade(k.helmet,.64), hL=shade(k.helmet,1.4), pD=shade(k.pants,.76);
+  var step=p.moving?Math.floor(p.anim*16)%4:0, upA=step===1, upB=step===3, sw=[0,1,0,-1][step];
+  cx.fillStyle='#0a0e13'; cx.fillRect(x-4,y-16,10,12);                        // outline backing (upper body)
+  // legs
+  cx.fillStyle=k.pants; cx.fillRect(x-3,y-5,2,upA?3:5); cx.fillRect(x+1,y-5,2,upB?3:5);
+  cx.fillStyle=pD;      cx.fillRect(x-3,y-5,1,upA?3:5); cx.fillRect(x+1,y-5,1,upB?3:5);
+  cx.fillStyle='#14151a'; cx.fillRect(x-3,y-(upA?2:0),2,1); cx.fillRect(x+1,y-(upB?2:0),2,1);  // cleats
+  // arms
+  cx.fillStyle=k.jersey; cx.fillRect(x-5,y-10+sw,2,4); cx.fillStyle=jD; cx.fillRect(x-5,y-10+sw,1,4);
+  cx.fillStyle=k.jersey; cx.fillRect(x+4,carry?y-9:y-10-sw,2,4);
+  // torso
+  cx.fillStyle=k.jersey; cx.fillRect(x-3,y-11,7,6);
+  cx.fillStyle=k.jersey; cx.fillRect(x-4,y-11,9,2);                           // shoulder pads
+  cx.fillStyle=jL;       cx.fillRect(x-4,y-11,9,1);                           // shoulder highlight
+  cx.fillStyle=jD;       cx.fillRect(x+3,y-10,1,5);                           // right-side shade
+  cx.fillStyle=jD;       cx.fillRect(x-3,y-6,7,1);                            // hem shade
+  if(p.num!=null){ var ns=''+p.num; ptext(ns,x+1-(ns.length*4-1)/2,y-10,1,contrastOn(k.jersey)); }
+  // helmet (ball carrier leans forward)
+  var hx=x+(carry?f:0);
+  cx.fillStyle=k.helmet; cx.fillRect(hx-3,y-15,7,4); cx.fillRect(hx-2,y-16,5,1);
+  cx.fillStyle=hL;       cx.fillRect(hx-2,y-16,3,1); cx.fillRect(hx-3,y-15,1,2);
+  cx.fillStyle=hD;       cx.fillRect(hx-3,y-12,7,1);
+  cx.fillStyle=hL;       cx.fillRect(hx,y-15,1,3);                            // center stripe
+  cx.fillStyle='#d7dbe0'; cx.fillRect(hx+(f>0?4:-4),y-14,1,2);                // facemask
+  if(carry){ cx.fillStyle='#7a3f12'; cx.fillRect(x+(f>0?5:-7),y-9,3,2); cx.fillStyle='#fff'; cx.fillRect(x+(f>0?6:-6),y-9,1,1); }
+  // name tag
+  if(p.pname){
+    var isSel=p.user||carry;
+    if(!isSel && G && G.poss===0 && P.rb){ var selCar=(G.pickCarry==='WR'&&P.wr)?P.wr[0]:P.rb; if(p===selCar)isSel=true; }
+    var nmCol=isSel?'#ffd23f':'#ffffff', wN=tw(p.pname,1), ny=Math.max(y-24,1);
+    ptext(p.pname,x-wN/2+1,ny+1,1,'#101425'); ptext(p.pname,x-wN/2,ny,1,nmCol);
+  }
   if(p.user){
     var bob=Math.floor(p.anim*4+Date.now()/250)%2;
     cx.fillStyle='#101425'; cx.fillRect(x-3,y-23-bob,8,2); cx.fillRect(x-2,y-21-bob,6,2); cx.fillRect(x-1,y-19-bob,4,2);
