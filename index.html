@@ -22,7 +22,7 @@
 *{box-sizing:inherit}
 html,body{height:100%; overflow:hidden;}
 body{
-  margin:0; background:var(--night); color:var(--chalk);
+  margin:0; background:radial-gradient(130% 120% at 50% -10%, #1a2742 0%, #0b1120 55%, #070a14 100%); color:var(--chalk);
   font-family:'Press Start 2P',ui-monospace,Menlo,Consolas,monospace;
   font-size:10px; line-height:1.6;
   -webkit-user-select:none; user-select:none; -webkit-tap-highlight-color:transparent;
@@ -30,36 +30,45 @@ body{
 #stage{ position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); transform-origin:center center; }
 body.rot #stage{ transform:translate(-50%,-50%) rotate(90deg); }
 #app{
-  width:100%; height:100%; display:flex; flex-direction:row; gap:4px; padding:4px;
-  background:var(--board); border:3px solid var(--steel); border-radius:10px;
+  width:100%; height:100%; display:flex; flex-direction:column; gap:7px; padding:9px;
+  background:linear-gradient(180deg,#1a2238 0%,#121a2e 100%);
+  border:3px solid var(--steel); border-radius:14px;
+  box-shadow:0 18px 50px rgba(0,0,0,.55), 0 0 0 1px rgba(0,0,0,.6) inset;
 }
 #sign{ display:none; }
-#sb{display:flex; flex-direction:column; gap:3px;}
-.tm{display:flex; align-items:center; gap:4px; background:#070b1a; border:2px solid var(--steel); padding:2px 4px; min-width:0}
-.tm.right{flex-direction:row}
-.tm.has{border-color:var(--amber)}
-.tm img{height:13px; width:18px; object-fit:contain; flex:none}
-.nm{flex:1; font-size:8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-.pts{font-size:13px; color:var(--amber); line-height:1}
-#mid{background:#070b1a; border:2px solid var(--steel); padding:2px 4px; display:flex; flex-direction:row; gap:6px; align-items:baseline; justify-content:center}
-#qtr{font-size:8px; color:var(--dim)}
-#clk{font-size:11px; color:var(--amber); line-height:1}
-#sit{display:flex; flex-direction:column; gap:2px; padding:1px 2px; font-size:7px}
-#dd{color:var(--amber)}
-#pos{color:var(--dim)}
-#field{
-  display:block; height:100%; width:auto; max-width:calc(100% - 92px);
-  aspect-ratio:400/216; background:var(--turf); margin:auto 0; flex:0 0 auto;
-  image-rendering:crisp-edges; image-rendering:pixelated;
-  touch-action:none; cursor:crosshair; border:2px solid #070b1a;
-}
-#side{ flex:1 1 auto; min-width:76px; max-width:116px; display:flex; flex-direction:column; gap:4px; overflow:hidden; }
-#bar{padding:2px; min-height:0; display:flex; flex-direction:column; gap:4px;}
-#hint{font-size:7px; color:var(--dim); min-height:0; line-height:1.5}
-#btns{display:flex; flex-direction:column; gap:4px; margin-top:0}
+/* ---- top control bar ---- */
+#top{ flex:none; display:flex; flex-direction:row; align-items:stretch; gap:8px; }
+#sb{ display:flex; flex-direction:row; align-items:stretch; gap:5px; flex:none; }
+.tm{ display:flex; align-items:center; gap:7px; background:#060a17; border:2px solid var(--steel);
+  border-radius:7px; padding:3px 9px; min-width:0; }
+.tm.right{ flex-direction:row-reverse; }
+.tm.has{ border-color:var(--amber); box-shadow:0 0 10px rgba(255,183,46,.35); }
+.tm img{ height:22px; width:28px; object-fit:contain; flex:none; }
+.nm{ font-size:10px; white-space:nowrap; letter-spacing:.5px; }
+.pts{ font-size:19px; color:var(--amber); line-height:1; min-width:18px; text-align:center; }
+#mid{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px;
+  background:#060a17; border:2px solid var(--steel); border-radius:7px; padding:2px 10px; }
+#qtr{ font-size:8px; color:var(--dim); letter-spacing:1px; }
+#clk{ font-size:15px; color:var(--amber); line-height:1; }
+#sit{ display:flex; flex-direction:column; justify-content:center; gap:3px; padding:0 4px 0 8px;
+  font-size:9px; border-left:2px solid rgba(58,70,112,.6); }
+#dd{ color:var(--amber); } #pos{ color:var(--dim); }
+#bar{ flex:1 1 auto; display:flex; flex-direction:column; justify-content:center; gap:5px; min-width:0; }
+#hint{ font-size:9px; color:var(--dim); line-height:1.5; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+#btns{ display:flex; flex-direction:row; flex-wrap:wrap; gap:6px; }
+#fsBtn{ flex:none; align-self:stretch; padding:0 11px; font-size:12px; color:var(--dim);
+  background:#060a17; border:2px solid var(--steel); border-radius:7px; cursor:pointer; }
+#fsBtn:hover{ color:var(--amber); border-color:var(--amber); }
 button{
-  font:inherit; font-size:8px; color:#101425; background:var(--chalk); width:100%; text-align:center;
-  border:0; border-bottom:3px solid #9b9889; border-radius:4px; padding:7px 3px 5px; cursor:pointer;
+  font:inherit; font-size:9px; color:#101425; background:var(--chalk); text-align:center;
+  border:0; border-bottom:3px solid #9b9889; border-radius:5px; padding:8px 11px 6px; cursor:pointer;
+}
+/* ---- field fills the rest ---- */
+#fieldwrap{ flex:1 1 auto; min-height:0; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+#field{
+  display:block; background:var(--turf); image-rendering:crisp-edges; image-rendering:pixelated;
+  touch-action:none; cursor:crosshair; border:2px solid #050913; border-radius:5px;
+  box-shadow:0 8px 30px rgba(0,0,0,.5);
 }
 button:active{transform:translateY(2px); border-bottom-width:2px}
 button:focus-visible{outline:3px solid var(--amber); outline-offset:2px}
@@ -83,13 +92,24 @@ h2{font-size:14px; margin:0 0 12px; color:var(--amber); font-weight:400}
 .how{text-align:left; font-size:8px; color:var(--dim); margin:14px 0 0; padding:0; list-style:none; line-height:1.9}
 .how b{color:var(--chalk); font-weight:400}
 .how li{margin-bottom:6px}
+/* desktop / big screens: frame it instead of stretching edge to edge */
+@media (min-width:900px) and (pointer:fine){
+  body.rot{} /* desktop never rotates */
+  #app{ max-width:1360px; max-height:860px; margin:auto; }
+  #hint{ font-size:10px; }
+  button{ font-size:10px; padding:9px 14px 7px; }
+  .nm{ font-size:11px; } .pts{ font-size:22px; } #clk{ font-size:17px; }
+  .tm img{ height:26px; width:34px; }
+  .card{ max-width:540px; }
+  .team img{ height:58px; }
+  h1{ font-size:22px; }
+}
 </style>
 </head>
 <body>
 <div id="stage">
 <div id="app">
-  <canvas id="field"></canvas>
-  <div id="side">
+  <div id="top">
     <div id="sb">
       <div class="tm" id="tmA"><img id="lgA" alt=""><span class="nm" id="nmA">HOME</span><span class="pts" id="ptA">0</span></div>
       <div id="mid"><div id="qtr">Q1</div><div id="clk">2:00</div></div>
@@ -108,7 +128,9 @@ h2{font-size:14px; margin:0 0 12px; color:var(--amber); font-weight:400}
         <button id="bGuard" class="hidden">Control</button>
       </div>
     </div>
+    <div id="fsBtn" title="Fullscreen">[ ]</div>
   </div>
+  <div id="fieldwrap"><canvas id="field"></canvas></div>
 </div>
 
 <div id="menu" class="ov">
@@ -156,7 +178,7 @@ var LOGOS = {"ccs": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABGCAMAA
    ==================================================================== */
 var TEAMS = [
   {key:'ccs', name:'Cambridge Christian', mascot:'Lancers',   short:'CAMBRIDGE',    abbr:'CCS', primary:'#1b3668', secondary:'#c4a52a', star:{name:'ELI', pos:'RB'},
-    roster:[{num:9,name:'LEO',pos:'QB'},{num:2,name:'ELI',pos:'RB',star:true},{num:5,name:'BEN',pos:'WR'},{num:54,name:'ETHAN',pos:'LB'},{num:7,name:'COOPER',pos:'DB'}]},
+    roster:[{num:9,name:'LEO',pos:'QB'},{num:2,name:'ELI',pos:'RB',star:true,nameCol:'#000000'},{num:5,name:'BEN',pos:'WR'},{num:3,name:'MINI',pos:'WR2'},{num:54,name:'ETHAN',pos:'LB',nameCol:'#ffffff'},{num:7,name:'COOPER',pos:'DB',nameCol:'#ffffff'},{num:53,name:'KRUTZ',pos:'DT'},{num:4,name:'MALACHI',pos:'DE'}]},
   {key:'sca', name:'Seffner Christian',   mascot:'Crusaders', short:'SEFFNER',      abbr:'SCA', primary:'#5a1424', secondary:'#ffffff',
     roster:[{num:4,name:'',pos:'QB'},{num:23,name:'',pos:'RB'},{num:5,name:'',pos:'WR'},{num:55,name:'',pos:'LB'},{num:20,name:'',pos:'DB'}]},
   {key:'kcs', name:'Keswick Christian',   mascot:'Crusaders',  short:'KESWICK',      abbr:'KCS', primary:'#0b6a36', secondary:'#ffffff',
@@ -405,10 +427,10 @@ function setupPlay(){
   var slotY=Math.random()<0.5?9.5:FW-9.5;
   var wr=[mk('WR',L-0.6,4,0),mk('WR',L-0.6,FW-4,0),mk('WR',L-0.6,slotY,0)];
   var ol=[-2,-1,0,1,2].map(function(i){return mk('OL',L-1,MID+i*1.9,0);});
-  wr.forEach(function(w){w.sp=7.6+ob;w.cr=1.7;w.brk=0.12;});
+  wr.forEach(function(w){w.sp=7.6+ob;w.cr=userOff?2.1:1.7;w.brk=0.12;});
   rb.sp=7.3+ob; rb.cr=1.6; rb.brk=0.14;
   if(st==='QB') qb.star=true;
-  if(st==='RB'){ rb.star=true; rb.sp=8.3; rb.brk=0.42; rb.cr=2.0; }
+  if(st==='RB'){ rb.star=true; rb.sp=9.3; rb.brk=0.62; rb.cr=2.2; }
   if(st==='WR'){ var w0=wr[0]; w0.star=true; w0.sp=8.5; w0.cr=2.4; w0.brk=0.38; }
   var dl=[-1.5,-0.5,0.5,1.5].map(function(i,k){
     var p=mk('DL',Math.min(L+1,118),MID+i*2.4,1); p.sp=5.2; p.ol=ol[k<2?k:k+1];
@@ -422,17 +444,17 @@ function setupPlay(){
   var s=mk('S',Math.min(L+15,118.5),MID,1); s.sp=7.1+db;
   if(!userOff){
     var uc = G.pickDef==='LB' ? lb[0] : s;      // the defender you chose to steer
-    uc.user=true; uc.sp+=0.7; P.user=uc;
+    uc.user=true; uc.sp+=1.1; P.user=uc;
     wr.forEach(function(w){ if(!w.star){ w.sp=7.3+ob; w.brk=0.08; } }); if(!rb.star){ rb.sp=7.0+ob; rb.brk=0.1; } else { rb.sp=7.9; rb.brk=0.3; }
     var togo=G.fd-G.los;
     P.aiRun = Math.random()<(togo<=3?0.6:0.38) ? Math.floor(Math.random()*4) : null;
     P.aiT = rnd(1.6,3.0);
   }
   (function(){                                   // attach jersey numbers + names from the rosters
-    function tag(sp,team,pos){ var R=team.roster||[],i; for(i=0;i<R.length;i++) if(R[i].pos===pos){ sp.num=R[i].num; sp.pname=R[i].name; return; } }
+    function tag(sp,team,pos){ if(!sp) return; var R=team.roster||[],i; for(i=0;i<R.length;i++) if(R[i].pos===pos){ sp.num=R[i].num; sp.pname=R[i].name; sp.nameCol=R[i].nameCol; return; } }
     var oT=userOff?G.me:G.opp, dT=userOff?G.opp:G.me;
-    tag(qb,oT,'QB'); tag(rb,oT,'RB'); tag(wr[0],oT,'WR');
-    tag(lb[0],dT,'LB'); tag(s,dT,'DB');
+    tag(qb,oT,'QB'); tag(rb,oT,'RB'); tag(wr[0],oT,'WR'); tag(wr[1],oT,'WR2');
+    tag(lb[0],dT,'LB'); tag(s,dT,'DB'); tag(dl[0],dT,'DE'); tag(dl[1],dT,'DT');
   })();
   P.qb=qb; P.rb=rb; P.wr=wr; P.ol=ol; P.dl=dl; P.lb=lb; P.cb=cb; P.s=s;
   P.recv=wr.concat([rb]);
@@ -601,7 +623,7 @@ function aiThrow(){
 }
 function throwBall(){
   var q=P.passer||P.qb, a=P.aim, d=Math.hypot(a.x-q.x,a.y-q.y);
-  var err=d*(q.star?0.015:0.055)+(G.poss===1?d*(0.03-0.018*G.diff):0);
+  var err=d*(q.star?0.012:0.042)+(G.poss===1?d*(0.03-0.018*G.diff):0);
   var tx=a.x+rnd(-err,err), ty=a.y+rnd(-err,err);
   P.ball={sx:q.x,sy:q.y,tx:tx,ty:ty,t:0,T:0.4+d/30,d:d};
   var best=null, bd=14;
@@ -617,18 +639,18 @@ function resolveCatch(){
   for(i=0;i<P.defAll.length;i++){ d=dist(P.defAll[i],L); if(d<dd){dd=d;df=P.defAll[i];} }
   var you=df && df.user;
   if(!r || dr>r.cr){
-    if(dd<(you?1.5:1.0) && Math.random()<(you?0.7:0.4+0.12*G.diff)) return endPlay('int',L.x,'INTERCEPTED!');
+    if(dd<(you?1.9:1.0) && Math.random()<(you?0.82:0.4+0.12*G.diff)) return endPlay('int',L.x,'INTERCEPTED!');
     return endPlay('inc',null,'INCOMPLETE');
   }
   var p=0.94;
-  if(dd<1.6) p=clamp(0.5+0.28*(dd-dr)+(r.star?0.12:0)+(P.qb.star?0.08:0)-(you?0.1:0),0.12,0.9);
+  if(dd<1.6) p=clamp(0.5+0.28*(dd-dr)+(r.star?0.12:0)+(P.qb.star?0.08:0)-(you?0.24:0),0.12,0.9);
   if(Math.random()<p){
     P.ball=null; P.carrier=r;
     if(r.x>=110) return endPlay('td',r.x,'TOUCHDOWN!');
     P.defAll.forEach(function(x){x.blockT=0; x.react=x.user?0:0.12;});
     steerY=null; setMode('run');
   }
-  else if(dd<1.6 && dd<dr+0.6 && Math.random()<(you?0.55:0.28+0.1*G.diff)) endPlay('int',L.x,'INTERCEPTED!');
+  else if(dd<1.8 && dd<dr+0.7 && Math.random()<(you?0.66:0.28+0.1*G.diff)) endPlay('int',L.x,'INTERCEPTED!');
   else endPlay('inc',null, dd<1.6?'BROKEN UP':'DROPPED');
 }
 
@@ -899,13 +921,24 @@ function hud(){
 /* ====================================================================
    INPUT
    ==================================================================== */
+function fitField(){
+  var z=$('fieldwrap'); if(!z) return;
+  var zw=z.clientWidth, zh=z.clientHeight; if(zw<=0||zh<=0) return;
+  var cw=Math.min(zw, zh*W/H), ch=cw*H/W;
+  cw=Math.floor(cw); ch=Math.floor(ch);
+  if(cv._cw!==cw||cv._ch!==ch){ cv._cw=cw; cv._ch=ch; cv.style.width=cw+'px'; cv.style.height=ch+'px'; }
+}
 function layout(){
   var w=window.innerWidth, h=window.innerHeight, rot=h>w, st=$('stage');
   document.body.classList.toggle('rot',rot);
   if(st){ st.style.width=(rot?h:w)+'px'; st.style.height=(rot?w:h)+'px'; }
+  fitField();
 }
+function fsOn(){ return !!(document.fullscreenElement||document.webkitFullscreenElement); }
 function goFS(){ try{ var el=document.documentElement, r=el.requestFullscreen||el.webkitRequestFullscreen;
-  if(r && !(document.fullscreenElement||document.webkitFullscreenElement)) { var pr=r.call(el); if(pr&&pr.catch) pr.catch(function(){}); } }catch(e){} }
+  if(r && !fsOn()){ var pr=r.call(el); if(pr&&pr.catch) pr.catch(function(){}); } }catch(e){} }
+function toggleFS(){ try{ if(fsOn()){ (document.exitFullscreen||document.webkitExitFullscreen).call(document); } else goFS(); }catch(e){} }
+(function(){ var fb=$('fsBtn'); if(fb) fb.onclick=toggleFS; })();
 document.addEventListener('fullscreenchange',function(){ setTimeout(layout,60); });
 window.addEventListener('resize',layout);
 window.addEventListener('orientationchange',function(){ setTimeout(layout,60); });
@@ -1048,8 +1081,8 @@ function drawPlayer(p){
   if(p.pname){
     var isSel=p.user||carry;
     if(!isSel && G && G.poss===0 && P.rb){ var selCar=(G.pickCarry==='WR'&&P.wr)?P.wr[0]:P.rb; if(p===selCar)isSel=true; }
-    var nmCol=isSel?'#ffd23f':'#ffffff', wN=tw(p.pname,1), ny=Math.max(y-24,1);
-    ptext(p.pname,x-wN/2+1,ny+1,1,'#101425'); ptext(p.pname,x-wN/2,ny,1,nmCol);
+    var nmCol=isSel?'#ffd23f':(p.nameCol||'#ffffff'), outl=contrastOn(nmCol), wN=tw(p.pname,1), ny=Math.max(y-24,1);
+    ptext(p.pname,x-wN/2+1,ny+1,1,outl); ptext(p.pname,x-wN/2,ny,1,nmCol);
   }
   if(p.user){
     var bob=Math.floor(p.anim*4+Date.now()/250)%2;
@@ -1156,6 +1189,7 @@ function frame(ts){
     else if(mode==='kick' && K) updateKick(dt);
     if(G){ var c=G.ot?'--:--':fmt(G.clock); if(c!==lastClk){ lastClk=c; $('clk').textContent=c; } }
   }
+  fitField();
   render(dt);
   requestAnimationFrame(frame);
 }
